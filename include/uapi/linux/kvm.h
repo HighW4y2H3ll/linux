@@ -1494,6 +1494,9 @@ struct kvm_s390_ucas_mapping {
 /*
  * ioctls for vcpu fds
  */
+#define KVM_ARM_VCPU_GET_VMID     _IOR(KVMIO, 0x80, u32)
+#define KVM_ARM_VCPU_GET_HCR      _IOR(KVMIO, 0x80, u64)
+#define KVM_ARM_VCPU_SET_HCR      _IOW(KVMIO, 0x80, u64)
 #define KVM_RUN                   _IO(KVMIO,   0x80)
 #define KVM_GET_REGS              _IOR(KVMIO,  0x81, struct kvm_regs)
 #define KVM_SET_REGS              _IOW(KVMIO,  0x82, struct kvm_regs)

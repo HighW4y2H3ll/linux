@@ -1221,6 +1221,32 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
 	long r;
 
 	switch (ioctl) {
+	case KVM_ARM_VCPU_GET_VMID: {
+        u32 vmid = vcpu->arch.hw_mmu->vmid.vmid;
+		r = -EFAULT;
+		if (copy_to_user(argp, &vmid, sizeof(vmid)))
+			break;
+		return 0;
+	}
+	case KVM_ARM_VCPU_GET_HCR:
+	case KVM_ARM_VCPU_SET_HCR: {
+		u64 hcr = 0;
+		r = -ENOEXEC;
+		if (unlikely(!kvm_vcpu_initialized(vcpu)))
+			break;
+
+		r = -EFAULT;
+		if (ioctl == KVM_ARM_VCPU_SET_HCR) {
+			if (copy_from_user(&hcr, argp, sizeof(hcr)))
+				break;
+			vcpu->arch.hcr_el2 = hcr;
+		} else {
+			hcr = vcpu->arch.hcr_el2;
+			if (copy_to_user(argp, &hcr, sizeof(hcr)))
+				break;
+		}
+		return 0;
+	}
 	case KVM_ARM_VCPU_INIT: {
 		struct kvm_vcpu_init init;
 
